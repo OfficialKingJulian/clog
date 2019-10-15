@@ -13,12 +13,12 @@
     count=1
     for file in /var/www/okju96.xyz/public_html/posts/drafts/* ; do
       printf "   ${count}: ${file##*/}\n"
-      count=$((${count}+1))
+      count=$((count+1))
     done
     echo ""
   }  
   function configfile {
-    echo "# sblog.conf" > sblog.conf
+    echo "# sblog.conf" >> sblog.conf
     echo "# Don't edit this unless you know" >> sblog.conf
     echo "# what things do" >> sblog.conf
     echo "" >> sblog.conf
