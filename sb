@@ -17,20 +17,6 @@
     done
     echo ""
   }  
-<<<<<<< HEAD
-=======
-  function configfile {
-    echo "# sblog.conf" >> sblog.conf
-    echo "# Don't edit this unless you know" >> sblog.conf
-    echo "# what things do" >> sblog.conf
-    echo "" >> sblog.conf
-    echo "${blogname} ${PWD}" >> sblog.conf
-    echo ""
-    echo "Config file created successfully!"
-    echo "The blog is ready to use."
-  }
-  
->>>>>>> master
 
 
 # MAIN
