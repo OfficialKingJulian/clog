@@ -7,11 +7,12 @@
 
 
 # List Drafts
-  function listdrafts {
+  function listfiles {
     echo ""
     echo "Current Draft Posts: "
     count=1
-    for file in posts/drafts/* ; do
+    for file in ${listlocation} ; do
+#    for file in posts/drafts/* ; do
       echo "   ${count}: ${file##*/}"
       count=$((count+1))
     done
@@ -44,14 +45,14 @@
 
 # Posting a post
     while true ; do
-      listdrafts
+      listlocation="posts/drafts/*"
+      listfiles
       printf "Which draft would you like to post? "
       read -r posttopost
       echo "${posttopost}"
       reg='^[0-9]+$' 
       if [[ ${posttopost} =~ ${reg} ]] ; then 
-        listdrafts > ./tmp
-#       echo "$(listdrafts)" > ./tmp
+        listfiles > ./tmp
         posttopost="1"
         posttopost=$(grep "${posttopost}:" "./tmp" | \
                      cut -d':' -f2 | cut -d' ' -f2)
@@ -136,6 +137,33 @@
     if [ ! -d "posts/published" ] ; then mkdir "posts/published" ; fi
     mv "posts/drafts/${posttopost}" "posts/published/${posttopost}" 
     mv "${ptphtml}" posts
+
+# Removing a post
+  elif [[ ${1} = "remove" ]] ; then
+    echo ""
+        while true ; do
+          listlocation="posts/*.html"
+          listfiles
+          printf "Which post would you like to remove? "
+          read -r posttoremove
+          echo "${posttoremove}"
+          reg='^[0-9]+$' 
+          if [[ ${posttoremove} =~ ${reg} ]] ; then 
+            listfiles > ./tmp
+            posttoremove="1"
+            posttoremove=$(grep "${posttoremove}:" "./tmp" | \
+                        cut -d':' -f2 | cut -d' ' -f2)
+            rm ./tmp
+          fi
+          if [ ! -f "posts/${posttoremove}" ] ; then
+            echo "" 
+            echo "There has been an error. We can't find the post you're looking for." 
+            echo "Please try again."
+          else
+            break
+          fi
+        done 
+        rm "posts/${posttoremove}"
 
 # Else
   else echo "This instruction needs a valid argument."
