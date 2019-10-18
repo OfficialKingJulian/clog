@@ -1,3 +1,0 @@
-# This post pushes the limits of... 
-
-Human endevour.
