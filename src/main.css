@@ -82,3 +82,21 @@
     transition: all ease 0.2s;
   }
 
+
+
+  /* Error Page */
+  #error-img {
+    width: 300px;
+    height: 200px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    padding: 0px;
+  }
+  #error-img::before {
+    display: none;
+  }
+/*Img Classes*/
+  .img-1 {background-image: url("https://www.kingjulian.xyz/imgeg/smallsuv_suzuki_ignis_0car.png")}
+  .img-2 {background-image: url("https://i.kym-cdn.com/entries/icons/mobile/000/020/633/le_monke.jpg")}
+  .img-3 {background-image: url("https://giphygifs.s3.amazonaws.com/media/5ftsmLIqktHQA/giphy.gif")}

@@ -5,6 +5,9 @@
   h1, h2, h3, h4, h5, h6, p {
     color: #FFF;
   } 
+  a, a:visited, a:hover, a:active {
+    color: #FFF;
+  }
   a::after:hover, 
   div.post-titles:hover h3::after,
   div.post-titles:hover p::after {

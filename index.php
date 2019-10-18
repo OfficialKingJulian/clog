@@ -76,6 +76,7 @@
     <?php
       }
     ?>
+    <?php include("footer.html"); ?>
   </section>
   <script type="text/javascript">
     <?php include("src/script.js"); ?>
