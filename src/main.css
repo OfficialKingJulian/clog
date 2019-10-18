@@ -43,6 +43,7 @@
       max-width: 500px;
       width: calc(100%-80px);
       margin: 0px auto;
+      position: relative;
     }
     div {
       padding: 8px 0px 12px 0px;
@@ -62,15 +63,38 @@
       bottom: 0px;
     }
 
+  .swapTogOuter {
+    position: absolute;
+    top: 10px;
+    right: 0px;
+    padding: 0;
+    cursor: pointer;
+    -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+        -moz-user-select: none;
+          -ms-user-select: none;
+              user-select: none; 
+  }
+  .swapTogOuter div {
+    padding: 0;
+    margin: 0px 4px;
+    display: inline-block;
+  }
+  .swapTogOuter::before, 
+  .swapTogOuter::after, 
+  .swapTogText::after,
+  .swapTogOuter div::before {
+    display: none !important;
+  }
+  .swapTogText {
+    transform: translateY(-4px);
+  }
   .swapTog {
     width: 36px;
     height: 16.5px;
     border-radius: 30px;
     position: relative;
-    padding: 0;
-  }
-  .swapTog::before {
-    display: none;
   }
   .swapTog::after {
     content: '';
