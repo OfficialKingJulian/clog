@@ -56,11 +56,7 @@
               $h1_tag = str_replace("</h1>", "", $h1_tag);
 
             // Handle p String
-              if (strlen($p_matches[0]) <= 3) {
-                $p_tag = "No description";
-              } else {
-                $p_tag = $p_matches[0]; 
-              }
+              $p_tag = $p_matches[1]; 
               $p_tag = str_replace("<p>", "", $p_tag);
               $p_tag = str_replace("</p>", "", $p_tag);
 
