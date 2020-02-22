@@ -6,8 +6,6 @@
  *  The main blog part is all that carries style with it.
  *
  */
-
-
   /* Selection */
     ::selection {
       background: #FEB;
@@ -105,9 +103,6 @@
     top: 1.5px;
     transition: all ease 0.2s;
   }
-
-
-
   /* Error Page */
   #error-img {
     width: 300px;

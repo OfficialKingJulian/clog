@@ -1,36 +1,13 @@
 #!/bin/bash 
 
 # Create Index File, Listing Posts, Etc.
-
   title=$(grep "title" .clogrc | sed -e "s/title://")
   descr=$(grep "descr" .clogrc | sed -e "s/descr://")
-
 # Header
-  echo "<!DOCTYPE html>
-  <html>
-  <head>
-    <meta type="description" content="${descr}" />
-    <title>Home | ${title}</title>
-    <link href="src/light.css" rel="stylesheet" type="text/css" />
-    <style>" > index.html
-  # Get Style
-  cat src/main.css >> index.html
-  echo "</style>
-  </head>
-  <body>
-    <section>
-      <div id="swapper" class="swapTogOuter">
-        <div class="swapTog"></div><div class="swapTogText">
-          <p>Mode</p>
-        </div>
-      </div>
-      <h1>
-        ${title}
-      </h1>" >> index.html
-
+  echo $(sed "s/<!--BLOG-TITLE-->/${title}/;s/<!--BLOG-DESCRIPTION-->/${descr}/" src/head.html) > index.html
 # Post Sort and Main Body
-
-
+  for file in posts/*.html ; do
+    echo "${file##*/}"
+  done
 # Footer
-  cat src/footer.html >> index.html
-
+  cat "src/footer.html" >> index.html

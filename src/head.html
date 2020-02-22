@@ -1,11 +1,117 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta type="description" content="This blog is a template page. Please change literally everything." />
-  <title>Blog | Tag Line</title>
+  <meta type="description" content="<!--BLOG-DESCRIPTION-->" />
+  <title>Home | <!--BLOG-TITLE--></title>
   <link href="src/light.css" rel="stylesheet" type="text/css" />
   <style>
-    
+    ::selection {
+      background: #FEB;
+    }
+    @import url('https://fonts.googleapis.com/css?family=Roboto+Mono&display=swap');
+    h1, h2, h3, h4, h5, h6, p {
+      line-height: 1.5;
+      font-family: 'Roboto Mono', monospace;
+      font-weight: 100;
+    }
+    h1 {
+      padding: 40px 0px 20px 0px;
+    }
+    a {
+      text-decoration: none;
+      position: relative;
+    }
+    a::after:hover, 
+    div.post-titles:hover h3::after,
+    div.post-titles:hover p::after {
+      content: ''; 
+      position: absolute;
+      width: 100%;
+      height: 1px;
+      bottom: -2px;
+      left: 0px;
+    }
+    section {
+      max-width: 500px;
+      width: calc(100%-80px);
+      margin: 0px auto;
+      position: relative;
+    }
+    div {
+      padding: 8px 0px 12px 0px;
+      position: relative;
+    }
+    div::before, div::after {
+      content: '';
+      width: 100%;
+      height: 1px;
+      position: absolute;
+      left: 0px;
+    }
+    div::before {
+      top: -1px; /* Lines Overlap */
+    }
+    div::after {
+      bottom: 0px;
+    }
+
+  .swapTogOuter {
+    position: absolute;
+    top: 10px;
+    right: 0px;
+    padding: 0;
+    cursor: pointer;
+    -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+        -moz-user-select: none;
+          -ms-user-select: none;
+              user-select: none; 
+  }
+  .swapTogOuter div {
+    padding: 0;
+    margin: 0px 4px;
+    display: inline-block;
+  }
+  .swapTogOuter::before, 
+  .swapTogOuter::after, 
+  .swapTogText::after,
+  .swapTogOuter div::before {
+    display: none !important;
+  }
+  .swapTogText {
+    transform: translateY(-4px);
+  }
+  .swapTog {
+    width: 36px;
+    height: 16.5px;
+    border-radius: 30px;
+    position: relative;
+  }
+  .swapTog::after {
+    content: '';
+    width: 13.5px;
+    height: 13.5px;
+    border-radius: 30px;
+    position: absolute;
+    top: 1.5px;
+    transition: all ease 0.2s;
+  }
+  /* Error Page */
+  #error-img {
+    width: 300px;
+    height: 200px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    padding: 0px;
+  }
+  #error-img::before {
+    display: none;
+  }
+  .img-1 {background-image: url("https://www.kingjulian.xyz/imgeg/smallsuv_suzuki_ignis_0car.png")}
+  .img-2 {background-image: url("https://i.kym-cdn.com/entries/icons/mobile/000/020/633/le_monke.jpg")}
+  .img-3 {background-image: url("https://giphygifs.s3.amazonaws.com/media/5ftsmLIqktHQA/giphy.gif")}
   </style>
 </head>
 <body>
@@ -16,5 +122,5 @@
       </div>
     </div>
     <h1>
-      Blog Title
+      <!--BLOG-TITLE-->
     </h1>

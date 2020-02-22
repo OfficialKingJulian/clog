@@ -8,13 +8,11 @@
   </section>
   <script type="text/javascript">
     window.addEventListener('load', function() {
-    // Get Random Image For 404 Page //
       var numberWang = Math.floor(Math.random() * 3) + 1;
       var imgElm = document.getElementById("error-img");
       if (typeof(imgElm) != 'undefined' && imgElm != null){
         imgElm.classList.add("img-" + numberWang);
       }
-  // Light // Dark // Modes //
       var lightdark = document.cookie;
       if (lightdark == "lida=dark") {
         document.cookie = "lida=dark;path=/";
@@ -37,7 +35,6 @@
       }
     });
     var styelm = document.getElementsByTagName("link")[0];
-  // Swap //
     function swapSheet(sheet) {
       styelm.setAttribute("href", sheet);
     }

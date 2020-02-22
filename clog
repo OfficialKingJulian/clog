@@ -1,57 +1,52 @@
 #!/bin/bash
-
-#            Clog, CL Blog
-
-# Main bash script for the
-#  simple blog repository.
-
-
-# List Drafts
+# Clog Dir
+  cl="$PWD"
+# Update Index Page
+  function indexpage {
+  # Create Index File, Listing Posts, Etc.
+    title=$(grep "title" .clogrc | sed -e "s/title://")
+    descr=$(grep "descr" .clogrc | sed -e "s/descr://")
+  # Header
+    echo $(sed "s/<!--BLOG-TITLE-->/${title}/;s/<!--BLOG-DESCRIPTION-->/${descr}/" src/head.html) > index.html
+  # Post Sort and Main Body
+    postlist=$(ls -t posts)
+    postlist=$(sed 's/drafts//g;s/published//g' <<< ${postlist})
+    plarr=($postlist)
+    for i in "${plarr[@]}" ; do
+      filenm="posts/${i}"
+      echo "<a href=\"$filenm\">" >> index.html
+      echo "  idk just testing" >> index.html
+      echo "</a>" >> index.html
+    done
+  # Footer
+    cat "src/footer.html" >> index.html
+  }
+# List Files In A Folder
   function listfiles {
     echo ""
-    echo "Current Draft Posts: "
     count=1
-    for file in ${listlocation} ; do
-#    for file in posts/drafts/* ; do
+    for file in ${loc} ; do
       echo "   ${count}: ${file##*/}"
       count=$((count+1))
     done
     echo ""
   }  
-
-# MAIN
-  if [[ ! -d posts/drafts ]] ; then mkdir posts/drafts ]] ; fi
-  if [[ ${1} = "add" ]] || [[ ${1} = "new" ]] ; then 
-
-# Adding a post    
-    if [[ ! -z ${2} ]] && [[ -z ${3} ]] ; then
-      posttitle=${2}
-    elif [[ ! -z ${3} ]] ; then
-      echo ""
-      echo "One post at a time please. Additionally, post titles cannot have spaces in them."
-      echo "Dashes are recommended instead (they have SEO benefits over no spaces at all)."
-      echo ""
-      echo "Please try again."
-      echo ""
-      exit 0 
-    else 
-      printf "What would you like to call the post? "
-      read -r posttitle
-    fi
-      echo "$posttitle"
-      vim "posts/drafts/$posttitle.md"
-
-
-  elif [[ ${1} = "post" ]] || [[ ${1} = "publish" ]] ; then
-
-# Posting a post
+# Create Draft Post
+  function add() {
+    printf "What would you like to call the post? "
+    read -r posttitle
+    posttitle=$(sed "s/ /-/g" <<< "${posttitle}")
+    vim "posts/drafts/${posttitle}.md"
+  }
+# Publish Post
+  function pub {
+    # Get Post to Post
     while true ; do
-      listlocation="posts/drafts/*"
+      loc="posts/drafts/*"
       listfiles
       printf "Which draft would you like to post? "
       read -r posttopost
-      echo "${posttopost}"
-      reg='^[0-9]+$' 
+      reg='^[0-9]+$'
       if [[ ${posttopost} =~ ${reg} ]] ; then 
         listfiles > ./tmp
         posttopost="1"
@@ -59,120 +54,86 @@
                      cut -d':' -f2 | cut -d' ' -f2)
         rm ./tmp
       fi
-      if [[ ! ${posttopost} == *".md"* ]] ; then posttopost=${posttopost}.md ; fi
+      if [[ ! ${posttopost} == *".md"* ]] ; then 
+        posttopost=${posttopost}.md 
+      fi
       if [ ! -f "posts/drafts/${posttopost}" ] ; then
         echo "" 
-        echo "There has been an error. We can't find the post you're looking for." 
+        echo "There has been an error. 
+              We can't find the post you're looking for." 
         echo "Please try again."
       else
         break
       fi
     done 
-
-  # Get File
-    ptphtml="$(echo "${posttopost}" | cut -d "." -f 1).php"
-    ptphtml="posts/drafts/${ptphtml}"
-
-  # Convert File to HTML
-    # It's not well written at the moment
-    # but it is functional
+    filename="posts/drafts/$(echo "${posttopost}" | cut -d "." -f 1).html"
+    printf "What is the title of the post? "
+    read title
+    printf "Short post description: "
+    read descr
     ul="false"
-    echo "<!DOCTYPE html>
-    <html>
-    <head>
-    <meta type=\"description\" content=\"${descvar}\" />
-    <title>${titlevar} | ${blogname}</title>
-    <link href=\"/src/light.css\" rel=\"stylesheet\" type=\"text/css\" />
-    <style>
-      <?php include(\"../src/main.css\"); ?>
-    </style>
-    </head>
-    <body>
-    <section>
-      <div id=\"swapper\" class=\"swapTogOuter\">
-        <div class=\"swapTog\"></div><div class=\"swapTogText\">
-          <p>Mode</p>
-        </div>
-      </div>
-      <p><a href=\"/\">Back</a></p> 
-      " > "${ptphtml}"
-    echo "<!--POSTINFO:${ptphtml}-->" >> "${ptphtml}"
+    # HEAD
+    echo $(sed "s/<!--BLOG-TITLE-->/${title}/;s/<!--BLOG-DESCRIPTION-->/${descr}/" src/head.html) > "${filename}"
+    # BODY
+    echo "<!--POSTDATE:$(date +%Y/%m/%d-%H-%M)-->" >> "${filename}"
     while read -r line ; do
-
       # Skip if empty line
       if [[ -z ${line} ]] ; then continue ; fi
-
       # Heading 6
       if [[ ${line} == *"###### "* ]] ; then
-        if [[ ${ul} = "true" ]] ; then echo "</ul>" >> "${ptphtml}" ; ul="false" ; fi
+        if [[ ${ul} = "true" ]] ; then echo "</ul>" >> "${filename}" ; ul="false" ; fi
         h6="###### "
-        printf '%s\n' "<h6>${line//$h6/}</h6>" >> "${ptphtml}"
-
+        printf '%s\n' "<h6>${line//$h6/}</h6>" >> "${filename}"
       # Heading 5
       elif [[ ${line} == *"##### "* ]] ; then
-        if [[ ${ul} = "true" ]] ; then echo "</ul>" >> "${ptphtml}" ; ul="false" ; fi
+        if [[ ${ul} = "true" ]] ; then echo "</ul>" >> "${filename}" ; ul="false" ; fi
         h5="##### "
-        printf '%s\n' "<h5>${line//$h5/}</h5>" >> "${ptphtml}"
-
+        printf '%s\n' "<h5>${line//$h5/}</h5>" >> "${filename}"
       # Heading 4
       elif [[ ${line} == *"#### "* ]] ; then
-        if [[ ${ul} = "true" ]] ; then echo "</ul>" >> "${ptphtml}" ; ul="false" ; fi
+        if [[ ${ul} = "true" ]] ; then echo "</ul>" >> "${filename}" ; ul="false" ; fi
         h4="#### "
-        printf '%s\n' "<h4>${line//$h4/}</h4>" >> "${ptphtml}"
-
+        printf '%s\n' "<h4>${line//$h4/}</h4>" >> "${filename}"
       # Heading 3
       elif [[ ${line} == *"### "* ]] ; then
-        if [[ ${ul} = "true" ]] ; then echo "</ul>" >> "${ptphtml}" ; ul="false" ; fi
+        if [[ ${ul} = "true" ]] ; then echo "</ul>" >> "${filename}" ; ul="false" ; fi
         h3="### "
-        printf '%s\n' "<h3>${line//$h3/}</h3>" >> "${ptphtml}"
-
+        printf '%s\n' "<h3>${line//$h3/}</h3>" >> "${filename}"
       # Heading 2
       elif [[ ${line} == *"## "* ]] ; then
-        if [[ ${ul} = "true" ]] ; then echo "</ul>" >> "${ptphtml}" ; ul="false" ; fi
+        if [[ ${ul} = "true" ]] ; then echo "</ul>" >> "${filename}" ; ul="false" ; fi
         h2="## "
-        printf '%s\n' "<h2>${line//$h2/}</h2>" >> "${ptphtml}"
-
+        printf '%s\n' "<h2>${line//$h2/}</h2>" >> "${filename}"
       # Heading 1
       elif [[ ${line} == *"# "* ]] ; then
-        if [[ ${ul} = "true" ]] ; then echo "</ul>" >> "${ptphtml}" ; ul="false" ; fi
+        if [[ ${ul} = "true" ]] ; then echo "</ul>" >> "${filename}" ; ul="false" ; fi
         h1="# "
-        printf '%s\n' "<h1>${line//$h1/}</h1>" >> "${ptphtml}"
-        
+        printf '%s\n' "<h1>${line//$h1/}</h1>" >> "${filename}"
       # UL
       elif [[ ${line} == *"- "* ]] ; then
         bulletpoint="- "
-        if [[ ${ul} = "false" ]] ; then echo "<ul>" >> "${ptphtml}" ; fi
+        if [[ ${ul} = "false" ]] ; then echo "<ul>" >> "${filename}" ; fi
         ul="true"
-        printf '%s\n' "<li><p>${line//$bulletpoint/}</p></li>" >> "${ptphtml}"
-
+        printf '%s\n' "<li><p>${line//$bulletpoint/}</p></li>" >> "${filename}"
       # Paragraph Standard
       else
-        if [[ ${ul} = "true" ]] ; then echo "</ul>" >> "${ptphtml}" ; ul="false" ; fi
-        echo "<p>${line}</p>" >> "${ptphtml}"
-
+        if [[ ${ul} = "true" ]] ; then echo "</ul>" >> "${filename}" ; ul="false" ; fi
+        echo "<p>${line}</p>" >> "${filename}"
       fi
     done < "posts/drafts/${posttopost}"
-      # Footer 
-      echo "
-            <?php include(\"../footer.html\"); ?>
-        </section>
-        <script type=\"text/javascript\">
-          <?php include(\"../src/script.js\"); ?>
-        </script>
-      </body>
-      </html>" >> "${ptphtml}"
+    # FOOT
+    cat "src/footer.html" >> "${filename}"
   # Moving .html To Correct Place
     if [ ! -d "posts/published" ] ; then mkdir "posts/published" ; fi
     mv "posts/drafts/${posttopost}" "posts/published/${posttopost}" 
-    mv "${ptphtml}" posts
-
-# Removing a post
-  
-  function rmpost() {
+    mv "${filename}" posts
+  }
+# Remove Post
+  function rem {
     while true ; do
-      listlocation="posts/*.php"
+      listlocation="posts/*.html"
       listfiles
-      if [[ $listfiles = "*.php" ]] ; then echo "No Posts Found To Remove"; exit 0; fi
+      if [[ $listfiles = "*.html" ]] ; then echo "No Posts Found To Remove"; exit 0; fi
       printf "Which post would you like to remove? "
       read -r posttoremove
       echo "${posttoremove}"
@@ -194,18 +155,25 @@
     done 
     rm "posts/${posttoremove}"
   }
-
-# Else
-
+# Usage Instructions
   function usage() {
     echo "This instruction needs a valid argument:"
     echo " - add / new           create a draft post"
     echo " - post / publish      publish a draft post"
     echo " - remove              remove a published post"
   }
-
-# Args
+# Deal With Arguments 
   case "${1}" in 
-    rm | remove) rmpost
+    add|new) 
+      add
+      ;;
+    post|publish) 
+      pub
+      ;;
+    rm|remove) 
+      rem
+      ;;
     *) usage
   esac 
+# Update the index page
+  indexpage
