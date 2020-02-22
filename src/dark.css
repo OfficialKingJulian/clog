@@ -11,7 +11,7 @@
   a::after:hover, 
   div.post-titles:hover h3::after,
   div.post-titles:hover p::after {
-    background-color: #FFF;
+    background-color: #999;
   }
   div::before, div::after {
     background-color: #FFF;

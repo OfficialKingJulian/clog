@@ -33,4 +33,5 @@ forgetting them.
 - [ ] Need to be able to write images and links in the
   markdown format
 - [ ] Also need to be able to do recognise bold and italic text at some point too
-- [ ] Assign dates to posts, rather than the current; sorting by most recently edited (bad method!!!)
+- [ ] Edit Mode, should be able to select a
+  markdown post to edit

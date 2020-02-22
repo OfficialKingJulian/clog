@@ -1,6 +1,17 @@
 #!/bin/bash
 # Clog Dir
   cl="$PWD"
+  function upset() {
+    printf "\n\nWarning: running this will remove any existing blog settings in clogrc.\n\nDo you with to proceed? (y/n) "
+    read yn
+    if [[ ${yn} = "n" ]] || [[ ${yn} = "no" ]] ; then exit 0 ; fi
+    printf "Blog Title: "
+    read blogtitle
+    printf "Blog Description: "
+    read blogdesc
+    echo title:${blogtitle} > .clogrc
+    echo descr:${blogdesc} >> .clogrc
+  }
 # Update Index Page
   function indexpage {
   # Create Index File, Listing Posts, Etc.
@@ -14,9 +25,13 @@
     plarr=($postlist)
     for i in "${plarr[@]}" ; do
       filenm="posts/${i}"
-      echo "<a href=\"$filenm\">" >> index.html
-      echo "  idk just testing" >> index.html
-      echo "</a>" >> index.html
+      echo "<div>" >> index.html
+      echo "  <a href=\"$filenm\">" >> index.html
+      echo "    <h3>" >>index.html
+      echo "    idk just testing" >> index.html
+      echo "    </h3>">>index.html
+      echo "  </a>" >> index.html
+      echo "</div>" >> index.html
     done
   # Footer
     cat "src/footer.html" >> index.html
@@ -172,6 +187,9 @@
       ;;
     rm|remove) 
       rem
+      ;;
+    setup)
+      upset
       ;;
     *) usage
   esac 
