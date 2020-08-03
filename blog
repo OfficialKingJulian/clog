@@ -13,6 +13,7 @@ use Switch;         # Switch
 use Cwd qw();       # Current Directory
 use Text::Markdown 'markdown';
 use File::Slurp;
+use Time::Piece;
 
 my $curdir = Cwd::cwd();
 
@@ -22,10 +23,10 @@ my $curdir = Cwd::cwd();
   switch($ar) {
     case "add"          { add(); }
     case "publish"      { publish(); }
-    case "rm"           { print "REMOVE" }
+ #  case "rm"           { print "REMOVE" }   -- need to add
     case "update"       { updateindex(); }
-    case "setup"        { print "Setup" }
-    else                { print "HELP, not recognized" }
+ #  case "setup"        { print "Setup" }    -- need to add
+    else                { print "Use this command with ./clog add" }
   }
 
 
@@ -85,7 +86,10 @@ my $curdir = Cwd::cwd();
 # HTML to Markdown
   sub html2mkdn {
 
+  # File URL and Add Date
     my $file = $_[0] =~ s/markdown/html/r; 
+    my $date = localtime->strftime('%Y-%m-%d');
+       $file = "$date-$file";
     my $mkdn = read_file("$curdir/posts/drafts/$_[0]");
   # Get SEO and Index Title and Description
     my $head = read_file("$curdir/src/head.html");
@@ -104,6 +108,9 @@ my $curdir = Cwd::cwd();
       print $fh $foot;
     close $fh;
 
+  # Update The Index Page!
+    updateindex();
+
   }
 
   sub updateindex {
@@ -117,17 +124,43 @@ my $curdir = Cwd::cwd();
        $head = $head =~ s/<!--BLOG-TITLE-->/$blogname/r;
        $head = $head =~ s/<!--BLOG-DESCRIPTION-->/$blogdescription/r;
     my $foot = read_file("$curdir/src/footer.html");
-
-  # Get File Array 
-    my @post = read_dir("$curdir/posts") ;
-    print @post;
-    
+   
   # Write to Index File
     open(my $fl, '>', "$curdir/index.html") or die "Cannot open file index.html";
       print $fl $head;
       print $fl "<h1>$blogname</h1>";
       print $fl "<h3>$blogdescription</h3>";
-      # print $fl $list;
+    # Get File Array 
+      my @post = read_dir("$curdir/posts") ;
+      foreach (@post) {
+
+      # Skip Drafts Folder
+        next if ($_ eq "drafts");
+
+    # Get Title, Description, Date
+      # Title, Desc from HTML
+        my @titl = grep { /(title)/ } read_file("$curdir/posts/$_");
+        my $ptit = $titl[0] =~ s/(<title>)|(<\/title>)//r;
+        my @desc = grep { /(description)/ } read_file("$curdir/posts/$_");
+        my $pdes = $desc[0] =~ s/(<meta type="description" content=")|(">)//r;
+
+        # Date from the URL
+        my @date = split('-', $_);
+
+      # Print HTML
+        print $fl "
+        <div>
+          <a href=\"posts/$_\">
+            <h2>
+              $ptit          </h2>
+              <p>
+              $pdes              <br />
+                Posted $date[2]/$date[1]/$date[0]
+              </p>
+          </a>
+        </div>
+        ";
+      }
       print $fl $foot;
     close $fl;
  
