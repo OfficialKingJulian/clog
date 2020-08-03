@@ -6,33 +6,5 @@
       </a>
     </p>
   </section>
-  <script type="text/javascript">
-    window.addEventListener('load', function() {
-      var lightdark = document.cookie;
-      if (lightdark == "lida=dark") {
-        document.cookie = "lida=dark;path=/";
-        swapSheet("/src/dark.css");
-      } else if (lightdark == "lida=light;path=/") {
-        document.cookie = "lida=light";
-        swapSheet("/src/light.css");
-      } else {
-        swapSheet("/src/light.css");
-      }
-      var button = document.getElementById("swapper");
-      button.onclick = function() { 
-        if (styelm.href.match("src/light.css")) {
-          document.cookie = "lida=dark;path=/";
-          swapSheet("/src/dark.css");
-        } else {
-          document.cookie = "lida=light;path=/";
-          swapSheet("/src/light.css"); 
-        }
-      }
-    });
-    var styelm = document.getElementsByTagName("link")[0];
-    function swapSheet(sheet) {
-      styelm.setAttribute("href", sheet);
-    }
-  </script>
 </body>
 </html> 
