@@ -8,12 +8,11 @@ command line.
 ## Benefits
 
 
-~~- Simple and easy to use ~~
-~~- Edit with vim and markdown ~~
-~~- Fairly SEO friendly ~~
-~~- Designed to be fast loading ~~
-~~- Sensible CSS defaults ~~ 
-
+- ~~ Simple and easy to use ~~
+- ~~ Edit with vim and markdown ~~
+- ~~ Fairly SEO friendly ~~
+- ~~ Designed to be fast loading ~~
+- ~~ Sensible CSS defaults ~~ 
 - I didn't have to learn how to use someone else's
   static site generator (also, all of the above)
 
